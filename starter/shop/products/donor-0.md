@@ -6,8 +6,6 @@ reference: "Cat Nose"
 width: 36.3
 height: 30.58
 price: 73.32
-thumbnail: "at_c.8"
-image: "at_c.8"
 description: "Patior aveho totam videlicet callide beatus subiungo decretum nobis. Agnosco arguo iusto vulgo cilicium vitiosus. Vindico vinitor vero."
 stock: 71
 sales: 12

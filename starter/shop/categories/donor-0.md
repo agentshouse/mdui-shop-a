@@ -2,7 +2,6 @@
 type: "shop_category"
 id: "donor-0"
 name: "animals"
-image: "at_c.8"
 ---
 
 # animals

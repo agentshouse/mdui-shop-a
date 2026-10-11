@@ -1,23 +1,11 @@
-# Shop admin
+# Shop A
 
-Products, categories, customers, orders, invoices and reviews of an online shop.
+A local-first shop administration App for products, categories, customers, orders and invoices stored in a House Room. Edits use native drafts and explicit saves. No live payment, email or fulfillment service is connected.
 
-An [agents.house](https://agents.house) Template: an App over one Room. `schema.yaml` is
-the Room's schema, `starter/` holds the documents a new Room starts with and `demo/` the
-documents of its demo Site.
+## Build and publish
 
-## Build
+Use Node.js 24.21 or later and `npm ci`. Run `npm run verify` for type checking, lint, regression tests, build, release and startup checks. `npm run publish` requires a clean committed `main` branch and a House App HTTPS `origin`; it verifies the exact source, then atomically publishes source and a parentless release.
 
-```sh
-npm ci
-npm run build
-```
+`starter/` contains one existing category, product and fictional customer. Image fields are omitted because Template starters are text-only. Missing media uses a plain placeholder. Both Shop siblings share the same schema and starter documents.
 
-## Publish
-
-Commit your change, then run `npm run publish`. It builds, then pushes `main` and the build,
-as one new commit without parents on `release`, to `origin`.
-
-## License
-
-See the license files beside this README.
+License texts and required attribution are retained in the repository and generated release notices.
