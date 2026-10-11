@@ -2,13 +2,13 @@
 import { expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 // @ts-expect-error Offline read-only JavaScript migration planner.
-import { imageTargets, planFields } from '../scripts/plan-donor-images.mjs';
+import { imageTargets, planFields } from './support/plan-donor-images.mjs';
 // @ts-expect-error Offline JavaScript fixture.
-import { seedRecords, serializeSeedRecord } from '../scripts/donor-seed-data.mjs';
+import { seedRecords, serializeSeedRecord } from './support/donor-seed-data.mjs';
 it('maps 130 products, 13 category covers and exactly 223 donor portraits', () => {
     const targets = imageTargets();
     expect(targets).toHaveLength(366);
-    const map = JSON.parse(readFileSync(new URL('../scripts/donor-demo/poster-attachments.json', import.meta.url), 'utf8'));
+    const map = JSON.parse(readFileSync(new URL('./support/donor-demo/poster-attachments.json', import.meta.url), 'utf8'));
     expect(Object.keys(map.attachments)).toHaveLength(379);
     const counts = { products: 0, categories: 0, customers: 0 };
     for (const target of targets) {

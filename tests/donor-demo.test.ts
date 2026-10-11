@@ -4,13 +4,13 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { verify, validate } from "@agentshouse/mdmodel";
 // @ts-expect-error Offline JavaScript fixture CLI.
-import { seedRecords, buildSeedChanges } from "../scripts/donor-seed-data.mjs";
+import { seedRecords, buildSeedChanges } from "./support/donor-seed-data.mjs";
 const hash = (value: string | Buffer) =>
   createHash("sha256").update(value).digest("hex");
 test("full retail donor output preserves every entity and relationship", () => {
   const manifest = JSON.parse(
     readFileSync(
-      new URL("../scripts/donor-demo/provenance.json", import.meta.url),
+      new URL("./support/donor-demo/provenance.json", import.meta.url),
       "utf8",
     ),
   );
@@ -26,14 +26,14 @@ test("full retail donor output preserves every entity and relationship", () => {
   expect(
     hash(
       readFileSync(
-        new URL("../scripts/donor-demo/records.json", import.meta.url),
+        new URL("./support/donor-demo/records.json", import.meta.url),
       ),
     ),
   ).toBe(manifest.outputSha256);
   expect(
     hash(
       readFileSync(
-        new URL("../scripts/donor-demo/package-lock.json", import.meta.url),
+        new URL("./support/donor-demo/package-lock.json", import.meta.url),
       ),
     ),
   ).toBe(manifest.lockSha256);
@@ -41,7 +41,7 @@ test("full retail donor output preserves every entity and relationship", () => {
     expect(
       hash(
         readFileSync(
-          new URL(`../scripts/donor-demo/upstream/${path}`, import.meta.url),
+          new URL(`./support/donor-demo/upstream/${path}`, import.meta.url),
         ),
       ),
     ).toBe(expected);

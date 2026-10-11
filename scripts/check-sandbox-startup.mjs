@@ -12,7 +12,7 @@ const entry = html.match(/<script[^>]+src="([^"]+\.js)"/)[1];
 const filename = path.resolve(root, 'dist', entry);
 assert(filename.startsWith(path.join(root, 'dist') + path.sep));
 const source = fs.readFileSync(filename, 'utf8');
-const donorRecords = JSON.parse(fs.readFileSync(path.join(root, 'scripts/donor-demo/records.json'), 'utf8'));
+const donorRecords = JSON.parse(fs.readFileSync(path.join(root, 'tests/support/donor-demo/records.json'), 'utf8'));
 const donorTypes = { products: 'shop_product', categories: 'shop_category', customers: 'shop_customer', orders: 'shop_order', invoices: 'shop_invoice', reviews: 'shop_review' };
 const nativeDocuments = Object.entries(donorRecords).flatMap(([resource, rows]) => rows.map(row => ({
     room: 'local-test-room', path: `shop/${resource}/${row.id}.md`, type: donorTypes[resource],

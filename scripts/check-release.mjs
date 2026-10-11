@@ -13,7 +13,7 @@ const reviewedPosterHelper = {
   source: "src/assets.ts",
   sha256: "fff7b41675395cc777c95103798e8154a3ece919b2e1957bc5f66c3476e35fce",
 };
-const reviewedRoomImage = { source: "src/RoomImage.tsx", sha256: "ac42c9fb7d0236e6253b0e63e969f3f34f311a310d1591c738e4304a3a0bd3eb" };
+const reviewedRoomImage = { source: "src/RoomImage.tsx", sha256: "7c5cfde91e9d8aa138410dea245e3f41a0731eea1684af090f6638f74f9b000a" };
 const reviewedRichText = [
   { source: "src/safeRichText.ts", sha256: "5fdd96b2474980d3c8600b9e5920e333f3643933812d99b51fb972d224deb80c" },
   { source: "src/products/SafeRichTextInput.tsx", sha256: "221b218457183beb0ae00ee40451ccc9ec8f3a8cf8fb9e88a08f17ee061487f1" },

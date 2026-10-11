@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { parse, validate, verify } from '@agentshouse/mdmodel';
 // @ts-expect-error The seed is a standalone JavaScript CLI.
-import { buildSeedChanges, seedRecords } from '../scripts/seed-data.mjs';
+import { buildSeedChanges, seedRecords } from './support/seed-data.mjs';
 import { createHouseDataProvider, definitions, matchesFilter, observeShop, readShop, shopQuery,
   type HouseRuntime, type MutationStatus, type ShopResource } from '../src/house';
 vi.mock('@agentshouse/app-bridge', () => ({ connectHouseBridge: vi.fn() }));

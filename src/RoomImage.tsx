@@ -50,7 +50,7 @@ export function RoomImage({ value, alt, className, style }: {
         }, { rootMargin: '160px' });
         observer.observe(element.current);
         return () => observer.disconnect();
-    }, [visible]);
+    }, [visible, value]);
     useEffect(() => {
         if (!visible || !isAttachmentReference(value)) return;
         let disposed = false;
@@ -69,6 +69,7 @@ export function RoomImage({ value, alt, className, style }: {
         return () => { disposed = true; if (objectUrl) URL.revokeObjectURL(objectUrl); };
     }, [provider, value, visible]);
     const source = error ? undefined : local ?? url;
+    if (value == null || value === "") return <span role="img" aria-label={`${alt}: No image`} className={className} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#666", background: "#f2f2f2", minHeight: 48, ...style }}>No image</span>;
     // Keep the element measurable for IntersectionObserver, without fake artwork.
     return <img ref={element} src={source} alt={alt}
         className={className} style={style} loading="lazy" decoding="async"

@@ -3,7 +3,7 @@ import ts from "typescript-eslint";
 import globals from "globals";
 import hooks from "eslint-plugin-react-hooks";
 export default ts.config(
-  { ignores: ["dist", "public", "node_modules", "scripts/donor-demo/upstream/**"] },
+  { ignores: ["dist", "public", "node_modules", "tests/support/donor-demo/upstream/**"] },
   js.configs.recommended,
   ...ts.configs.recommended,
   {

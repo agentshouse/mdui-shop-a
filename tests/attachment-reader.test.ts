@@ -50,7 +50,7 @@ describe('scoped attachment runtime read', () => {
 it('reads the complete image-linked donor dataset without any image fetch', async () => {
     const { readFileSync } = await import('node:fs');
     const { readShop, definitions } = await import('../src/house');
-    const records = JSON.parse(readFileSync(new URL('../scripts/donor-demo/records.json', import.meta.url), 'utf8'));
+    const records = JSON.parse(readFileSync(new URL('./support/donor-demo/records.json', import.meta.url), 'utf8'));
     const documents = Object.entries(records).flatMap(([resource, rows]) => (rows as any[]).map(row => ({
         room: ROOM, path: `shop/${resource}/${row.id}.md`, type: definitions[resource as keyof typeof definitions].type,
         fields: { type: definitions[resource as keyof typeof definitions].type, ...Object.fromEntries(Object.entries(row).map(([key, value]) => [key, typeof value === 'boolean' ? String(value) : value != null && typeof value === 'object' ? JSON.stringify(value) : value])) },

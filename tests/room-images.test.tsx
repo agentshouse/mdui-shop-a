@@ -51,7 +51,8 @@ describe('lazy Room image boundary', () => {
         view.rerender(<RoomImage value="" alt="" />);
         await act(async () => resolve({ blob: jpeg(), status: 'available' }));
         expect(URL.createObjectURL).not.toHaveBeenCalled();
-        expect(view.container.querySelector('img')).not.toHaveAttribute('src');
+        expect(view.container.querySelector('img')).toBeNull();
+        expect(view.getByText('No image')).toBeVisible();
     });
     it('does not fall back to a URL when bytes are missing', async () => {
         provider.getAttachment.mockResolvedValue({ blob: null, status: 'unavailable' });
