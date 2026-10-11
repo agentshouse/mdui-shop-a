@@ -1,6 +1,6 @@
-import { act, render, waitFor } from '@testing-library/react';
+import { act, cleanup, render, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { RoomImage, isSafeRaster } from '../src/RoomImage';
+import { RoomImage, isSafeRaster, verifiedRaster } from '../src/RoomImage';
 const { provider } = vi.hoisted(() => ({ provider: { getAttachment: vi.fn() } }));
 vi.mock('react-admin', () => ({ useDataProvider: () => provider }));
 let enter: IntersectionObserverCallback;
@@ -13,7 +13,7 @@ beforeEach(() => {
     vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
     provider.getAttachment.mockResolvedValue({ blob: jpeg(), name: 'animals-1.jpeg', type: 'image/jpeg', status: 'available' });
 });
-afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 async function intersect() { await act(async () => enter([{ isIntersecting: true }] as IntersectionObserverEntry[], {} as IntersectionObserver)); }
 describe('lazy Room image boundary', () => {
     it('does not read until near viewport, then renders only a verified blob URL and revokes it', async () => {
@@ -40,7 +40,7 @@ describe('lazy Room image boundary', () => {
         provider.getAttachment.mockResolvedValue({ blob: new Blob(['<svg/>'], { type: 'image/jpeg' }), status: 'available' });
         const view = render(<RoomImage value="at_c.8" alt="" />);
         await intersect();
-        await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('title', 'The Room file is not a supported raster image.'));
+        await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('title', expect.stringContaining('The Room file is not a supported raster image.')));
         expect(URL.createObjectURL).not.toHaveBeenCalled();
     });
     it('discards a late result when value changes or the component unmounts', async () => {
@@ -74,4 +74,37 @@ it('clears the previous object URL before showing another record image', async (
     expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:first');
     await act(async () => resolve({ blob: jpeg(), status: 'available' }));
     await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('src', 'blob:second'));
+});
+
+
+it.each(['', 'application/octet-stream'])('renders verified JPEG bytes when transport MIME is %j and metadata is absent', async mime => {
+    const original = new Blob([await jpeg().arrayBuffer()], { type: mime });
+    provider.getAttachment.mockResolvedValue({ blob: original, name: 'animals-1.jpeg', type: null, status: 'available' });
+    const view = render(<RoomImage value="at_c.8" alt="Donor poster" />);
+    await intersect();
+    await waitFor(() => expect(view.getByAltText('Donor poster')).toHaveAttribute('src', 'blob:verified-room-image'));
+    const rendered = vi.mocked(URL.createObjectURL).mock.calls[0][0] as Blob;
+    expect(rendered.type).toBe('image/jpeg');
+    expect(new Uint8Array(await rendered.arrayBuffer())).toEqual(new Uint8Array(await original.arrayBuffer()));
+});
+it('allows absent/generic MIME only with a known raster signature and rejects explicit mismatches', async () => {
+    const untyped = new Blob([await jpeg().arrayBuffer()]);
+    expect((await verifiedRaster(untyped, 'image/jpeg'))?.type).toBe('image/jpeg');
+    for (const mime of ['image/svg+xml', 'text/html', 'application/javascript', 'image/png', 'image/unknown']) {
+        expect(await verifiedRaster(untyped, mime)).toBeUndefined();
+        expect(await verifiedRaster(new Blob([await jpeg().arrayBuffer()], { type: mime }))).toBeUndefined();
+    }
+    for (const body of ['<svg/>', '<html/>', '', 'not a raster']) {
+        expect(await verifiedRaster(new Blob([body]))).toBeUndefined();
+        expect(await verifiedRaster(new Blob([body], { type: 'application/octet-stream' }))).toBeUndefined();
+    }
+    expect(await verifiedRaster(new Blob([new Uint8Array(10 * 1024 * 1024 + 1)]))).toBeUndefined();
+});
+it.each([
+    ['image/png', [137, 80, 78, 71, 13, 10, 26, 10]],
+    ['image/gif', Array.from(new TextEncoder().encode('GIF89a'))],
+    ['image/webp', Array.from(new TextEncoder().encode('RIFF0000WEBP'))],
+    ['image/avif', Array.from(new TextEncoder().encode('0000ftypavif'))],
+])('types signature-verified %s bytes without trusting a filename', async (mime, bytes) => {
+    expect((await verifiedRaster(new Blob([new Uint8Array(bytes as number[])])))?.type).toBe(mime);
 });

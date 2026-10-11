@@ -12,6 +12,15 @@ const entry = html.match(/<script[^>]+src="([^"]+\.js)"/)[1];
 const filename = path.resolve(root, 'dist', entry);
 assert(filename.startsWith(path.join(root, 'dist') + path.sep));
 const source = fs.readFileSync(filename, 'utf8');
+const donorRecords = JSON.parse(fs.readFileSync(path.join(root, 'scripts/donor-demo/records.json'), 'utf8'));
+const donorTypes = { products: 'shop_product', categories: 'shop_category', customers: 'shop_customer', orders: 'shop_order', invoices: 'shop_invoice', reviews: 'shop_review' };
+const nativeDocuments = Object.entries(donorRecords).flatMap(([resource, rows]) => rows.map(row => ({
+    room: 'local-test-room', path: `shop/${resource}/${row.id}.md`, type: donorTypes[resource],
+    fields: { type: donorTypes[resource], ...Object.fromEntries(Object.entries(row).map(([key, value]) => [key,
+        typeof value === 'boolean' ? String(value) : value != null && typeof value === 'object' ? JSON.stringify(value) : value,
+    ])) },
+})));
+assert.equal(nativeDocuments.length, 2005);
 
 async function check(withHost) {
     const window = new Window({
@@ -25,6 +34,8 @@ async function check(withHost) {
     });
     // Happy DOM omits the browser structuredClone global used for detached local draft values.
     window.structuredClone = structuredClone;
+    // This no-layout DOM check exercises native forms, not attachment visibility.
+    window.IntersectionObserver = class { observe() {} unobserve() {} disconnect() {} };
     const storageReads = { localStorage: 0, sessionStorage: 0 };
     let networkCalls = 0;
     const errors = [];
@@ -53,7 +64,7 @@ async function check(withHost) {
         const room = { locator: 'local-test-room', name: 'Local startup fixture' };
         const host = createHouseBridgeTestHost({ address: '/app/local-startup-test' });
         const values = {
-            rooms: [room], query: { documents: [] }, queue: [], 'room-drafts': [],
+            rooms: [room], query: { documents: structuredClone(nativeDocuments) }, queue: [], 'room-drafts': [],
             'service-mode': 'open', 'storage-loss': null, 'connection-refusal': null,
             'sync-status': { state: 'synced', lastCompleted: '2026-10-11T13:00:00Z', providerUnreachable: false, attentionRequired: [], reset: null },
         };
@@ -117,9 +128,34 @@ async function check(withHost) {
             const findCreate = () => [...window.document.querySelectorAll('a')].find(link => link.getAttribute('href')?.endsWith('/products/create'));
             const listDeadline = Date.now() + 3000;
             while (Date.now() < listDeadline && !findCreate()) await new Promise(resolve => setTimeout(resolve, 20));
-            const create = findCreate();
-            assert(create, `The donor Create Product link is present: ${window.location.hash}; ${window.document.body.textContent.slice(-2400)}; ${errors.join('; ')}`);
-            create.click();
+            assert(findCreate(), `The donor Create Product link is present: ${window.location.hash}; ${window.document.body.textContent.slice(-2400)}; ${errors.join('; ')}`);
+            const findNativeProduct = () => [...window.document.querySelectorAll('a')].find(link => link.getAttribute('href')?.endsWith('/products/donor-126'));
+            const nativeProduct = findNativeProduct();
+            assert(nativeProduct, 'Aerial Coast appears in the real donor product list');
+            nativeProduct.click();
+            const editDeadline = Date.now() + 3000;
+            while (Date.now() < editDeadline && !window.document.querySelector('input[name="reference"]')) await new Promise(resolve => setTimeout(resolve, 20));
+            const nativeInput = window.document.querySelector('input[name="reference"]');
+            assert(nativeInput, 'The exact native fields-all product opens in the donor editor');
+            assert.equal(nativeInput.value, 'Aerial Coast');
+            Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(nativeInput, 'Native product draft');
+            nativeInput.dispatchEvent(new window.Event('input', {bubbles: true}));
+            const nativeDeadline = Date.now() + 3000;
+            while (Date.now() < nativeDeadline && !localDrafts.get('shop/products/donor-126.md')?.parts.fields?.reference) await new Promise(resolve => setTimeout(resolve, 20));
+            const nativeParts = localDrafts.get('shop/products/donor-126.md')?.parts;
+            assert.deepEqual(structuredClone(nativeParts?.fields?.reference), {value: 'Native product draft', base: {value: 'Aerial Coast'}}, `Native edit preserves its exact field base: ${window.document.body.textContent.slice(-2400)}`);
+            assert(!Object.hasOwn(nativeParts.fields, 'type'), 'Native type is not an editable field');
+            [...window.document.querySelectorAll('a')].find(link => link.getAttribute('href')?.endsWith('/products')).click();
+            const reopenDeadline = Date.now() + 3000;
+            while (Date.now() < reopenDeadline && !findNativeProduct()) await new Promise(resolve => setTimeout(resolve, 20));
+            findNativeProduct().click();
+            const restoredDeadline = Date.now() + 3000;
+            while (Date.now() < restoredDeadline && window.document.querySelector('input[name="reference"]')?.value !== 'Native product draft') await new Promise(resolve => setTimeout(resolve, 20));
+            assert.equal(window.document.querySelector('input[name="reference"]')?.value, 'Native product draft', 'Reopening recovers the native field draft');
+            [...window.document.querySelectorAll('a')].find(link => link.getAttribute('href')?.endsWith('/products')).click();
+            const createDeadline = Date.now() + 3000;
+            while (Date.now() < createDeadline && !findCreate()) await new Promise(resolve => setTimeout(resolve, 20));
+            findCreate().click();
             const formDeadline = Date.now() + 3000;
             while (Date.now() < formDeadline && !window.document.querySelector('[role="tab"]')) await new Promise(resolve => setTimeout(resolve, 20));
             assert.equal(window.document.querySelectorAll('[role="tab"]').length, 3, `Draft lifecycle must preserve three tabs: ${window.location.hash}; ${window.document.body.textContent.slice(-2400)}; ${errors.join('; ')}`);

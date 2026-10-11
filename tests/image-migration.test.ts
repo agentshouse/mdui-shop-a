@@ -35,5 +35,13 @@ it('uses absent-field bases for newly supported optional category images', () =>
     const target = imageTargets().find((target: any) => target.type === 'shop_category');
     const row = seedRecords.categories.find((row: any) => row.id === target.id);
     const { image: _image, ...before } = row;
-    expect(planFields(target, serializeSeedRecord('categories', before))).toEqual([{ op: 'set_field', path: target.path, field: 'image', base: null, value: row.image }]);
+    expect(planFields(target, serializeSeedRecord('categories', before))).toEqual([{ op: 'set_field', path: target.path, field: 'image', value: row.image }]);
+});
+
+it('distinguishes absence from null and preserves the empty-string guard', () => {
+    const target = imageTargets().find((target: any) => target.type === 'shop_category');
+    const row = seedRecords.categories.find((row: any) => row.id === target.id);
+    const markdown = serializeSeedRecord('categories', { ...row, image: '' });
+    expect(planFields(target, markdown)[0]).toHaveProperty('base', '');
+    expect(() => planFields(target, markdown.replace('image: ""', 'image: null'))).toThrow('Changed image');
 });

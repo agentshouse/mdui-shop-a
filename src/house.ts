@@ -415,6 +415,7 @@ export function readShop(
     );
     if (!resource) refused(`Unsupported Shop document at ${document.path}.`);
     const fields = { ...document.fields };
+    if (Object.hasOwn(fields, "type") && fields.type !== definitions[resource].type) refused(`Mismatched ${resource} document type.`, document);
     const row: Row = { id: validId(fields.id) };
     for (const [key, kind] of Object.entries(fieldsFor(resource))) {
       const storageName = storedKey(resource, key);
@@ -1126,6 +1127,12 @@ type DraftReference = {path: string; revision: string};
 function draftValues(resource: ShopResource, fields: Readonly<Record<string, unknown>>) {
   const values: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(fields)) {
+    // Native fields-all includes the discriminator. Preserve it in the opened CAS
+    // snapshot, validate the exact type, and omit it only from editable values.
+    if (key === 'type') {
+      if (value !== definitions[resource].type) refused(`Mismatched ${resource} draft type.`);
+      continue;
+    }
     const kind = fieldsFor(resource)[key];
     if (!kind) refused(`Unsupported ${resource} draft field: ${key}.`);
     if (kind === 'boolean' && (value === 'true' || value === 'false')) values[key] = value === 'true';

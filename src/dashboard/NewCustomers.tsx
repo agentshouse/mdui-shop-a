@@ -1,4 +1,5 @@
 import { initials } from '../assets';
+import { initialsAvatarSx } from '../visitors/initialsAvatarSx';
 import * as React from 'react';
 import { Avatar, Box, Button } from '@mui/material';
 import CustomerIcon from '@mui/icons-material/PersonAdd';
@@ -46,6 +47,7 @@ const NewCustomers = () => {
                     primaryText="%{first_name} %{last_name}"
                     leftAvatar={customer => (
                         <Avatar
+                            sx={initialsAvatarSx}
                             alt={`${customer.first_name} ${customer.last_name}`}>{initials(customer)}</Avatar>
                     )}
                 />

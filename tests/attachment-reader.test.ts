@@ -53,11 +53,19 @@ it('reads the complete image-linked donor dataset without any image fetch', asyn
     const records = JSON.parse(readFileSync(new URL('../scripts/donor-demo/records.json', import.meta.url), 'utf8'));
     const documents = Object.entries(records).flatMap(([resource, rows]) => (rows as any[]).map(row => ({
         room: ROOM, path: `shop/${resource}/${row.id}.md`, type: definitions[resource as keyof typeof definitions].type,
-        fields: Object.fromEntries(Object.entries(row).map(([key, value]) => [key, typeof value === 'boolean' ? String(value) : value != null && typeof value === 'object' ? JSON.stringify(value) : value])),
+        fields: { type: definitions[resource as keyof typeof definitions].type, ...Object.fromEntries(Object.entries(row).map(([key, value]) => [key, typeof value === 'boolean' ? String(value) : value != null && typeof value === 'object' ? JSON.stringify(value) : value])) },
     })));
     const db = readShop({ documents }, ROOM);
     expect(db.products).toHaveLength(130);
     expect(db.categories.filter(row => row.image)).toHaveLength(13);
     expect(db.customers.filter(row => row.avatar)).toHaveLength(223);
     expect(db.products[0]).toMatchObject({ image: 'at_c.8', thumbnail: 'at_c.8' });
+});
+
+
+it.each(['', 'application/octet-stream'])('preserves generic transport MIME %j with null declared metadata after scope/hash verification', async type => {
+    const result = await fixture({ media_type: null, blob: new Blob([bytes], { type }) }).provider.getAttachment('at_c.8');
+    expect(result.type).toBeNull();
+    expect(result.blob?.type).toBe(type);
+    expect(new Uint8Array(await result.blob!.arrayBuffer())).toEqual(bytes);
 });

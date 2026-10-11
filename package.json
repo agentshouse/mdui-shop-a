@@ -37,7 +37,8 @@
     "prebuild": "node scripts/prepare-release.mjs",
     "release:check": "node scripts/check-release.mjs && npm run test:startup",
     "notices": "node scripts/generate-notices.mjs",
-    "test:startup": "node --experimental-vm-modules --disallow-code-generation-from-strings --frozen-intrinsics scripts/check-sandbox-startup.mjs"
+    "test:startup": "node --experimental-vm-modules --disallow-code-generation-from-strings --frozen-intrinsics scripts/check-sandbox-startup.mjs",
+    "publish": "node publish.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.19.19",

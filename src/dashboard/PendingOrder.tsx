@@ -1,4 +1,5 @@
 import { initials } from '../assets';
+import { initialsAvatarSx } from '../visitors/initialsAvatarSx';
 import * as React from 'react';
 import {
     ListItem,
@@ -30,10 +31,10 @@ export const PendingOrder = (props: Props) => {
             <ListItemButton component={Link} to={`/orders/${order.id}`}>
                 <ListItemAvatar>
                     {isPending ? (
-                        <Avatar >{initials(customer)}</Avatar>
+                        <Avatar sx={initialsAvatarSx}>{initials(customer)}</Avatar>
                     ) : (
                         <Avatar
-                            sx={{ bgcolor: 'background.paper' }}
+                            sx={{ bgcolor: 'background.paper', color: 'text.primary' }}
                             alt={`${customer?.first_name} ${customer?.last_name}`}>{initials(customer)}</Avatar>
                     )}
                 </ListItemAvatar>

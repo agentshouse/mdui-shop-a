@@ -25,7 +25,7 @@ export function planFields(target, markdown) {
         const old = document.fields[field];
         // Never replace somebody's deliberately selected artwork or newer attachment.
         assert(old === undefined || old === '' || old === value, `Changed ${field} at ${target.path}; review before planning`);
-        return old === value ? [] : [{ op: 'set_field', path: target.path, field, base: old ?? null, value }];
+        return old === value ? [] : [{ op: 'set_field', path: target.path, field, ...(old === undefined ? {} : { base: old }), value }];
     });
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

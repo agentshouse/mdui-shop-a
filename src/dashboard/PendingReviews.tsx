@@ -81,6 +81,7 @@ const PendingReviews = () => {
                                             <Avatar
                                                 sx={{
                                                     bgcolor: 'background.paper',
+                                                    color: 'text.primary',
                                                 }}
                                                 alt={`${customer.first_name} ${customer.last_name}`}>{initials(customer)}</Avatar>
                                         )}

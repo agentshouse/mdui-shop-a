@@ -1,4 +1,5 @@
 import { initials } from '../assets';
+import { initialsAvatarSx } from './initialsAvatarSx';
 import { RoomImage } from '../RoomImage';
 import * as React from 'react';
 import { Avatar, SxProps } from '@mui/material';
@@ -16,7 +17,10 @@ const AvatarField = ({ size = '25', sx }: Props) => {
     return (
         <Avatar
             style={{ width: parseInt(size, 10), height: parseInt(size, 10) }}
-            sx={sx}
+            sx={[
+                !record.avatar && initialsAvatarSx,
+                ...(Array.isArray(sx) ? sx : [sx]),
+            ]}
             alt={`${record.first_name} ${record.last_name}`}>{record.avatar ? <RoomImage value={record.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(record)}</Avatar>
     );
 };
