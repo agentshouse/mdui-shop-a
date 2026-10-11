@@ -1,0 +1,52 @@
+Shop Admin port provenance
+
+Donor: marmelab/react-admin, examples/demo
+Repository: https://github.com/marmelab/react-admin
+Pinned commit: f1213e048d60d83df74900b2fc8415fd3287610c
+Source: https://github.com/marmelab/react-admin/tree/f1213e048d60d83df74900b2fc8415fd3287610c/examples/demo
+Donor license: MIT; original text is preserved verbatim in LICENSE.txt and
+THIRD_PARTY_NOTICES.txt. The license checksum is verified before release.
+
+The retained Material UI Shop administration screens, dashboard, resource lists,
+editing forms, themes, icons, and welcome illustration derive from this donor.
+House-backed providers, local asset safety changes, and bundled synthetic poster
+illustrations are port modifications. Remote photos and avatar endpoints are not
+part of the release. Font assets are distributed locally from @fontsource/roboto
+and @fontsource/quicksand; their original SIL Open Font License notices are in the
+combined notices and separate font notice files. No remote font service is needed.
+
+THIRD_PARTY_NOTICES.txt is generated from installed, lockfile-pinned production
+dependencies. This is a superset of the actual bundled modules. Package license
+identifiers and original distributed license/copyright/notice files are retained.
+Build-only dependencies are not described as distributed runtime components.
+Any package-root license-text omissions supplemented by upstream texts are
+identified with exact source URL, package version, and checksum in the generator
+and audit report. Supplemental texts do not change the package's declared license.
+
+Known platform licensing gap: @agentshouse/app-bridge declares UNLICENSED and
+includes no license grant. Technical checks do not establish authorization to
+redistribute this package or make the combined bundle wholly MIT-licensed.
+
+Static release checks do not replace runtime/browser acceptance testing or legal
+review. This provenance record does not assert independent third-party clearance
+beyond the specific donor and package notices retained in the release.
+
+Build-time optional-feature adaptations preserve all surrounding dependency code
+and original notices. Exact version, AST-node checksum, and single-match guards
+are used for React Router 7.18.2 framework module loading, ra-core 5.15.4 telemetry,
+@tiptap/extension-link 3.31.4 external opening, and ECharts 6.1.0 external opening.
+The unsupported framework/navigation helpers refuse the operation; telemetry
+keeps an inert React hook. House bridge and Runtime source are not transformed.
+
+ROOM IMAGE PROVENANCE
+Shop images resolve from existing Room attachments, not external image hosts.
+Repository: https://github.com/marmelab/posters
+Commit: 143ffbf4772146f9ab6131bfdfe090bdc36c1218
+Attachment manifest: /rooms/shop-port/images/posters.md
+Master supplied the 379-file manifest in Porting on 2026-10-11, reporting
+public-domain source images per the donor README. This statement is retained
+as supplied provenance; it does not replace or broaden an upstream license.
+The product/category mapping follows the pinned React Admin donor source.
+The customer avatar mapping is reproduced by the unchanged seeded generator.
+React Admin's original MIT notice and all dependency notices are retained.
+No new image binary is distributed in the application release.

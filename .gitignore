@@ -1,0 +1,18 @@
+node_modules/
+dist/
+*.log
+seed-changes.json
+reports/*initial*
+tax-correction.json
+test-results.json
+
+# Transient runtime-migration command output
+/reports/runtime-migration/*.log
+/reports/runtime-migration/*.err
+
+# Raw transport captures and operation batches; summaries are committed.
+/reports/donor-demo/batches/
+/reports/donor-demo/*.txt
+
+/reports/donor-demo/originals/
+/reports/images/*.log

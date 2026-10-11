@@ -1,0 +1,17 @@
+{
+  "entry": "index.html",
+  "room_slots": [
+    {
+      "name": "shop",
+      "access": "write",
+      "types": [
+        "shop_customer",
+        "shop_category",
+        "shop_product",
+        "shop_order",
+        "shop_invoice",
+        "shop_review"
+      ]
+    }
+  ]
+}

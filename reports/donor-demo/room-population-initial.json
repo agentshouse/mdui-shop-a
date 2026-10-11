@@ -1,0 +1,172 @@
+{
+  "date": "2026-10-11",
+  "room": "shop-port",
+  "schemaRevision": "fr_rq.3.3",
+  "source": {
+    "repository": "https://github.com/marmelab/react-admin",
+    "commit": "f1213e048d60d83df74900b2fc8415fd3287610c",
+    "license": "MIT",
+    "seed": 1150,
+    "referenceDate": "2026-10-11T12:00:00.000Z",
+    "outputSha256": "d9844cecb8ba69a54ff661b39ad7cf0bb9944c9d4a20eebd9ae19316a2325cca"
+  },
+  "donorCounts": {
+    "categories": 13,
+    "products": 130,
+    "customers": 900,
+    "orders": 600,
+    "invoices": 77,
+    "reviews": 285
+  },
+  "donorDocuments": 2005,
+  "retainedLegacyDocuments": 72,
+  "totalDocuments": 2077,
+  "batches": 41,
+  "readback": "Every donor document was independently read after its batch and compared exactly to its schema-validated source document, excluding only transport trailing newlines. All batch receipts and exact readbacks were checked again at completion.",
+  "documentSetSha256": "4678a4175c1aa46d7db13379a3925779f7996812f18afbb8fa14c37b1d06197f",
+  "originalPreservation": [
+    {
+      "paths": [
+        "/rooms/shop-port/shop/categories/category-1.md",
+        "/rooms/shop-port/shop/categories/category-2.md",
+        "/rooms/shop-port/shop/categories/category-3.md",
+        "/rooms/shop-port/shop/categories/category-4.md",
+        "/rooms/shop-port/shop/customers/customer-1.md",
+        "/rooms/shop-port/shop/customers/customer-10.md",
+        "/rooms/shop-port/shop/customers/customer-11.md",
+        "/rooms/shop-port/shop/customers/customer-12.md"
+      ],
+      "sha256": "26ee38b2c2f598f34ecc36d3778d9bad8b5f6916909560baef5946c7f64added",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/customers/customer-13.md",
+        "/rooms/shop-port/shop/customers/customer-14.md",
+        "/rooms/shop-port/shop/customers/customer-15.md",
+        "/rooms/shop-port/shop/customers/customer-16.md",
+        "/rooms/shop-port/shop/customers/customer-2.md",
+        "/rooms/shop-port/shop/customers/customer-3.md",
+        "/rooms/shop-port/shop/customers/customer-4.md",
+        "/rooms/shop-port/shop/customers/customer-5.md"
+      ],
+      "sha256": "bb965c3d62a73f2c76ff572b6928813b7b71964eee29fece81342a65cacff429",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/customers/customer-6.md",
+        "/rooms/shop-port/shop/customers/customer-7.md",
+        "/rooms/shop-port/shop/customers/customer-8.md",
+        "/rooms/shop-port/shop/customers/customer-9.md",
+        "/rooms/shop-port/shop/invoices/invoice-1.md",
+        "/rooms/shop-port/shop/invoices/invoice-10.md",
+        "/rooms/shop-port/shop/invoices/invoice-2.md",
+        "/rooms/shop-port/shop/invoices/invoice-3.md"
+      ],
+      "sha256": "44284117d4ee403207b738f749b4d5b5346b2555fefd2a32736f152f109b9156",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/invoices/invoice-4.md",
+        "/rooms/shop-port/shop/invoices/invoice-5.md",
+        "/rooms/shop-port/shop/invoices/invoice-6.md",
+        "/rooms/shop-port/shop/invoices/invoice-7.md",
+        "/rooms/shop-port/shop/invoices/invoice-8.md",
+        "/rooms/shop-port/shop/invoices/invoice-9.md",
+        "/rooms/shop-port/shop/orders/order-1.md",
+        "/rooms/shop-port/shop/orders/order-10.md"
+      ],
+      "sha256": "6b06ac3c4b2f7764c3057c2513a5054e2174774ae4fb6de0d291f626e4f59a1c",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/orders/order-11.md",
+        "/rooms/shop-port/shop/orders/order-12.md",
+        "/rooms/shop-port/shop/orders/order-13.md",
+        "/rooms/shop-port/shop/orders/order-14.md",
+        "/rooms/shop-port/shop/orders/order-15.md",
+        "/rooms/shop-port/shop/orders/order-16.md",
+        "/rooms/shop-port/shop/orders/order-17.md",
+        "/rooms/shop-port/shop/orders/order-18.md"
+      ],
+      "sha256": "538bffa0dc465e44ccee260ba4caaba96e73789136826290144010975b08fa43",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/orders/order-2.md",
+        "/rooms/shop-port/shop/orders/order-3.md",
+        "/rooms/shop-port/shop/orders/order-4.md",
+        "/rooms/shop-port/shop/orders/order-5.md",
+        "/rooms/shop-port/shop/orders/order-6.md",
+        "/rooms/shop-port/shop/orders/order-7.md",
+        "/rooms/shop-port/shop/orders/order-8.md",
+        "/rooms/shop-port/shop/orders/order-9.md"
+      ],
+      "sha256": "cf27535832eb02b47a4b3cb4f844e1a60b9b6adcb65734a63410c47169409260",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/products/product-1.md",
+        "/rooms/shop-port/shop/products/product-10.md",
+        "/rooms/shop-port/shop/products/product-11.md",
+        "/rooms/shop-port/shop/products/product-12.md",
+        "/rooms/shop-port/shop/products/product-2.md",
+        "/rooms/shop-port/shop/products/product-3.md",
+        "/rooms/shop-port/shop/products/product-4.md",
+        "/rooms/shop-port/shop/products/product-5.md"
+      ],
+      "sha256": "b1758172cce410bcb3868630b61c021c99363216b178f5dcc09e412429a7187f",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/products/product-6.md",
+        "/rooms/shop-port/shop/products/product-7.md",
+        "/rooms/shop-port/shop/products/product-8.md",
+        "/rooms/shop-port/shop/products/product-9.md",
+        "/rooms/shop-port/shop/reviews/review-1.md",
+        "/rooms/shop-port/shop/reviews/review-10.md",
+        "/rooms/shop-port/shop/reviews/review-11.md",
+        "/rooms/shop-port/shop/reviews/review-12.md"
+      ],
+      "sha256": "1f408649c43d8d0c6de458d393bd3298eb58d677361c11a3cf4b1de6ced739e8",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    },
+    {
+      "paths": [
+        "/rooms/shop-port/shop/reviews/review-2.md",
+        "/rooms/shop-port/shop/reviews/review-3.md",
+        "/rooms/shop-port/shop/reviews/review-4.md",
+        "/rooms/shop-port/shop/reviews/review-5.md",
+        "/rooms/shop-port/shop/reviews/review-6.md",
+        "/rooms/shop-port/shop/reviews/review-7.md",
+        "/rooms/shop-port/shop/reviews/review-8.md",
+        "/rooms/shop-port/shop/reviews/review-9.md"
+      ],
+      "sha256": "2bc9e70579a004cf6ca0b25e676313faf4c9cc73796ae7d1f7461137ad857afa",
+      "matchesOriginalsExceptAuthorizedConfig": true,
+      "configurationReplaced": false
+    }
+  ],
+  "schemaUntouched": true,
+  "configurationReplaced": false,
+  "deletions": 0,
+  "publication": "Not performed by dataset worker",
+  "limitations": [
+    "The Room includes retained legacy synthetic documents; it is not exclusively source-derived.",
+    "Remote donor media is omitted for honest initials or an explicit local unavailable-image placeholder."
+  ]
+}

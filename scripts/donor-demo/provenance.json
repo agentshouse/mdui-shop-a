@@ -1,0 +1,44 @@
+{
+  "repository": "https://github.com/marmelab/react-admin",
+  "commit": "f1213e048d60d83df74900b2fc8415fd3287610c",
+  "license": "MIT",
+  "seed": 1150,
+  "referenceDate": "2026-10-11T12:00:00.000Z",
+  "timezone": "UTC",
+  "dependencies": {
+    "@faker-js/faker": "10.6.0",
+    "date-fns": "3.6.0",
+    "esbuild": "0.27.4"
+  },
+  "counts": {
+    "categories": 13,
+    "products": 130,
+    "customers": 900,
+    "orders": 600,
+    "invoices": 77,
+    "reviews": 285
+  },
+  "outputSha256": "18efc3500028c528be7a736b9bbae4e8e28c4c4c38ec3f59ec4e9bd8cb1bd4ce",
+  "posterAttachmentsSha256": "0affef95be96ae17cabf665bfc828e3fb41756f41747a12a828e04f2eaac88e5",
+  "posters": {
+    "repository": "https://github.com/marmelab/posters",
+    "commit": "143ffbf4772146f9ab6131bfdfe090bdc36c1218",
+    "room": "r_19.z",
+    "source": "/rooms/shop-port/images/posters.md"
+  },
+  "lockSha256": "035a6517400b2210832438bf127535c87821f2f2d21f2fff9034b5c26f827b30",
+  "sources": {
+    "examples/data-generator/LICENSE.md": "fc29239be86b7a259eb3ed6530ac7e176406ec35ff962c2a3297c4933c4f7e7a",
+    "examples/data-generator/package.json": "6ad2562907ecb1bc0e6bcbede9ac7fee5d26302ec71913d0bdcd62ba475f1427",
+    "examples/data-generator/src/categories.ts": "4cd64aaa18a47670277f5e62066d3b8933f43fde02dfc81a1ec11becf4ebad96",
+    "examples/data-generator/src/customers.ts": "aa4f22f0d25b138cf2acfe0ab490409852d79d06a9087e50d3e4531c92a94747",
+    "examples/data-generator/src/finalize.ts": "54d6abdf69c3b40cfaf7aef5567e38791c47ed6d457db216cd6a96201a352a8d",
+    "examples/data-generator/src/index.ts": "e315acebb3d2f0337df390a2604763ea7ac6b9cabddcf458f3ae7f5526a2d83b",
+    "examples/data-generator/src/invoices.ts": "c4f621e1fe04deef238225cf35292ae1883e11e13fa1984c97f833439b95c6c7",
+    "examples/data-generator/src/orders.ts": "652f107b564b6e89d67aa741617bf6cbdd052d276d3880558052d13a164bf5d5",
+    "examples/data-generator/src/products.ts": "632dfed88305642dd2fd3fd7058b5e6fdfdfc0018935faa4d06c878bfa811788",
+    "examples/data-generator/src/reviews.ts": "da536bb9ffaacc76292a8316b7e6f8318c765f31752e9a824050535640cb8012",
+    "examples/data-generator/src/types.ts": "13fa3553a8e3676363534e6cbe2e2dbdef6e1b923125bf5ba222b4bb3ba2c3ba",
+    "examples/data-generator/src/utils.ts": "71e2585c5cd75910dfd8fa5c726d8169e2ec9742776b7592a1363f51501229ac"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "room_ref": "r_19.z",
+  "room_handle": "shop-port",
+  "schema_revision": "fr_rq.2.8",
+  "schema_readback_equal": true,
+  "document_count": 72,
+  "counts": {
+    "categories": 4,
+    "customers": 16,
+    "invoices": 10,
+    "orders": 18,
+    "products": 12,
+    "reviews": 12
+  },
+  "sample_documents_verified": [
+    "shop/orders/order-2.md",
+    "shop/products/product-1.md"
+  ],
+  "all_document_contents_compared": true,
+  "admission": "admitted",
+  "tax_rate_fraction_verified": true
+}

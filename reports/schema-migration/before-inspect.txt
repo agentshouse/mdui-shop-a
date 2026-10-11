@@ -1,0 +1,9 @@
+ref: af_rq.x
+path: /rooms/shop-port/settings/schema.yaml
+revisions:
+  - revision: fr_rq.2.8
+    created_at: 2026-10-11T01:35:41.064506Z
+    author_user: 01a0e90c-531c-76df-85bf-d34caf05519c
+  - revision: fr_rq.1.a
+    created_at: 2026-10-11T01:29:54.079671Z
+    author_user: 01a0e90c-531c-76df-85bf-d34caf05519c

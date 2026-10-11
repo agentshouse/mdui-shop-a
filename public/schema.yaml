@@ -1,0 +1,219 @@
+# House JSON Schema (draft 2020-12). Unconstrained patterns keep identifiers,
+# dates and serialized scalar data exact-match without changing accepted values.
+shop_customer:
+  properties:
+    avatar:
+      type: string
+      pattern: ^[\s\S]*$
+    id:
+      type: string
+      pattern: ^[\s\S]*$
+    first_name:
+      type: string
+    last_name:
+      type: string
+    email:
+      type: string
+      pattern: ^[\s\S]*$
+    address:
+      type: string
+    zipcode:
+      type: string
+      pattern: ^[\s\S]*$
+    city:
+      type: string
+    stateAbbr:
+      type: string
+      pattern: ^[\s\S]*$
+    birthday:
+      type: string
+      pattern: ^[\s\S]*$
+    first_seen:
+      type: string
+      pattern: ^[\s\S]*$
+    last_seen:
+      type: string
+      pattern: ^[\s\S]*$
+    latest_purchase:
+      type: string
+      pattern: ^[\s\S]*$
+    nb_orders:
+      type: number
+    total_spent:
+      type: number
+    has_newsletter:
+      enum:
+      - 'true'
+      - 'false'
+    has_ordered:
+      enum:
+      - 'true'
+      - 'false'
+    groups:
+      type: string
+      pattern: ^[\s\S]*$
+  required:
+  - id
+  - first_name
+  - last_name
+  - email
+  - first_seen
+  - last_seen
+shop_category:
+  properties:
+    image:
+      type: string
+      pattern: ^[\s\S]*$
+    id:
+      type: string
+      pattern: ^[\s\S]*$
+    name:
+      type: string
+  required:
+  - id
+  - name
+shop_product:
+  properties:
+    id:
+      type: string
+      pattern: ^[\s\S]*$
+    category_id:
+      type: string
+      pattern: ^[\s\S]*$
+    reference:
+      type: string
+      pattern: ^[\s\S]*$
+    thumbnail:
+      type: string
+      pattern: ^[\s\S]*$
+    image:
+      type: string
+      pattern: ^[\s\S]*$
+    description:
+      type: string
+    width:
+      type: number
+    height:
+      type: number
+    price:
+      type: number
+    stock:
+      type: number
+    sales:
+      type: number
+  required:
+  - id
+  - category_id
+  - reference
+  - width
+  - height
+  - price
+  - stock
+shop_order:
+  properties:
+    id:
+      type: string
+      pattern: ^[\s\S]*$
+    reference:
+      type: string
+      pattern: ^[\s\S]*$
+    date:
+      type: string
+      pattern: ^[\s\S]*$
+    customer_id:
+      type: string
+      pattern: ^[\s\S]*$
+    status:
+      type: string
+      pattern: ^[\s\S]*$
+    total_ex_taxes:
+      type: number
+    delivery_fees:
+      type: number
+    tax_rate:
+      type: number
+    taxes:
+      type: number
+    total:
+      type: number
+    returned:
+      enum:
+      - 'true'
+      - 'false'
+    basket:
+      type: string
+      pattern: ^[\s\S]*$
+  required:
+  - id
+  - reference
+  - date
+  - customer_id
+  - status
+  - total_ex_taxes
+  - delivery_fees
+  - tax_rate
+  - taxes
+  - total
+  - basket
+shop_invoice:
+  properties:
+    id:
+      type: string
+      pattern: ^[\s\S]*$
+    date:
+      type: string
+      pattern: ^[\s\S]*$
+    order_id:
+      type: string
+      pattern: ^[\s\S]*$
+    customer_id:
+      type: string
+      pattern: ^[\s\S]*$
+    total_ex_taxes:
+      type: number
+    delivery_fees:
+      type: number
+    tax_rate:
+      type: number
+    taxes:
+      type: number
+    total:
+      type: number
+  required:
+  - id
+  - date
+  - order_id
+  - customer_id
+  - total
+shop_review:
+  properties:
+    id:
+      type: string
+      pattern: ^[\s\S]*$
+    date:
+      type: string
+      pattern: ^[\s\S]*$
+    status:
+      type: string
+      pattern: ^[\s\S]*$
+    order_id:
+      type: string
+      pattern: ^[\s\S]*$
+    product_id:
+      type: string
+      pattern: ^[\s\S]*$
+    customer_id:
+      type: string
+      pattern: ^[\s\S]*$
+    comment:
+      type: string
+    rating:
+      type: number
+  required:
+  - id
+  - date
+  - status
+  - product_id
+  - customer_id
+  - comment
+  - rating

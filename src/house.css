@@ -1,0 +1,15 @@
+html, body, #root { min-height: 100%; margin: 0; }
+body { font-family: Roboto, Arial, sans-serif; }
+.house-status { position: sticky; top: 0; z-index: 1201; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 18px; background: #f4f5fb; color: #22283f; border-bottom: 1px solid #dfe2ee; font-size: 14px; }
+.house-status label { font-weight: 700; }
+.house-status select { font: inherit; padding: 6px 30px 6px 9px; max-width: min(320px, 65vw); color: #202644; background: #fff; border: 1px solid #b9bfd4; border-radius: 5px; }
+.house-status [role=status] { margin-left: auto; }
+.house-queue summary { cursor: pointer; }
+.house-queue div { padding: 8px 0; }
+.house-message { padding: 12px 20px; font-size: 14px; line-height: 1.6; }
+.house-message button { margin-left: 12px; font: inherit; cursor: pointer; }
+.house-error { background: #fff0f0; color: #8a1720; }
+.house-warning { background: #fff5db; color: #624b0b; }
+.house-empty { padding: 48px max(24px, 8vw); color: #273151; }
+.house-message details { margin-top: 5px; }
+@media (max-width: 600px) { .house-status [role=status] { width: 100%; margin-left: 0; } }
