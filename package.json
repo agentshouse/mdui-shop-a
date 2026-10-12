@@ -39,8 +39,9 @@
     "notices": "node scripts/generate-notices.mjs",
     "test:startup": "node --experimental-vm-modules --disallow-code-generation-from-strings --frozen-intrinsics scripts/check-sandbox-startup.mjs",
     "publish": "node publish.mjs",
-    "verify": "npm run typecheck && npm run lint && npm test -- --maxWorkers=2 && npm run build && npm run release:check && node scripts/check-release.mjs --self-test && node scripts/generate-notices.mjs --check && npm run starter:check",
-    "starter:check": "node scripts/check-starter.mjs"
+    "verify": "npm run test:publisher && npm run typecheck && npm run lint && npm test -- --maxWorkers=2 && npm run build && npm run release:check && node scripts/check-release.mjs --self-test && node scripts/generate-notices.mjs --check && npm run starter:check",
+    "starter:check": "node scripts/check-starter.mjs",
+    "test:publisher": "node --test scripts/publish-regression.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.19.19",
