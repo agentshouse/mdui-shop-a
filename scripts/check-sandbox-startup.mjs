@@ -1,3 +1,4 @@
+import { houseBridge } from '@agentshouse/app-bridge';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -90,8 +91,7 @@ async function check(withHost) {
                 return { current: () => values[kind], subscribe: listener => { const held = subscribers.get(kind) ?? new Set(); held.add(listener); subscribers.set(kind, held); return () => held.delete(listener); }, close() {} };
             },
         };
-        window.houseBridge = host.port;
-        window.houseRuntime = host.runtime;
+        Object.defineProperty(window, 'houseBridge', { value: houseBridge(), configurable: true });
         host.attachRuntime(client);
     }
     try {

@@ -8,7 +8,7 @@ import { parse, validate, verify } from '@agentshouse/mdmodel';
 import { buildSeedChanges, seedRecords } from './support/seed-data.mjs';
 import { createHouseDataProvider, definitions, matchesFilter, observeShop, readShop, shopQuery,
   type HouseRuntime, type MutationStatus, type ShopResource } from '../src/house';
-vi.mock('@agentshouse/app-bridge', () => ({ connectHouseBridge: vi.fn() }));
+vi.mock('@agentshouse/app-bridge', () => ({ houseBridge: vi.fn() }));
 
 type Row = { id: string; [key: string]: any };
 type Entry = [ShopResource, Row];

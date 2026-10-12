@@ -1,7 +1,7 @@
-import { connectHouseBridge } from "@agentshouse/app-bridge";
+import { houseBridge } from "@agentshouse/app-bridge";
 import type { DataProvider, Identifier, RaRecord } from "react-admin";
 import { isAttachmentReference, posterChoices } from "./assets";
-export type HouseRuntime = Awaited<ReturnType<typeof connectHouseBridge>["runtime"]>;
+export type HouseRuntime = Awaited<ReturnType<typeof houseBridge>["runtime"]>;
 export type HouseRoom = Awaited<ReturnType<HouseRuntime["rooms"]>>[number];
 export type MutationStatus = {
   phase: "saving" | "queued" | "error" | "idle";
@@ -106,7 +106,8 @@ function validId(value: unknown): string {
 let connection: Promise<HouseRuntime> | undefined;
 export function houseRuntime(): Promise<HouseRuntime> {
   connection ??= (async () => {
-    const bridge = connectHouseBridge();
+    const bridge = houseBridge();
+    if (!bridge) throw new Error("house_bridge_absent");
     bridge.setTab({ title: "Shop admin" });
     return bridge.runtime;
   })().catch((error: unknown) => {

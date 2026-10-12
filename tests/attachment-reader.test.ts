@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
 import { createHouseDataProvider, type HouseRuntime } from '../src/house';
-vi.mock('@agentshouse/app-bridge', () => ({ connectHouseBridge: vi.fn() }));
+vi.mock('@agentshouse/app-bridge', () => ({ houseBridge: vi.fn() }));
 const ROOM = 'r_19.z';
 const bytes = new Uint8Array([255, 216, 255, 224, 0]);
 function fixture(patch: Record<string, any> = {}) {
