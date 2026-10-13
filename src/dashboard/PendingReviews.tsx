@@ -39,13 +39,10 @@ const PendingReviews = () => {
         pagination: { page: 1, perPage: 100 },
     });
 
-    // Poor man's Suspense: hide the content until all the data is loaded,
-    // including the reference customers.
-    // As ReferenceField aggregates the calls to reference customers,
-    // if the first customer is loaded, then all the customers are loaded.
+    const firstCustomerId = reviews?.[0]?.customer_id;
     const isCustomerDataLoaded = useIsDataLoaded(
-        ['customers', 'getMany', { ids: [String(reviews?.[0].customer_id)] }],
-        { enabled: !isPending && reviews && reviews.length > 0 }
+        ['customers', 'getMany', { ids: firstCustomerId === undefined ? [] : [String(firstCustomerId)] }],
+        { enabled: !isPending && firstCustomerId !== undefined }
     );
     const display = isPending || !isCustomerDataLoaded ? 'none' : 'block';
 
