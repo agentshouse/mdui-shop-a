@@ -1,10 +1,10 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs';
+import { binaryRecords } from './support/binary-records';
 import { expect, it } from 'vitest';
 import { definitions, readShop, type ShopResource } from '../src/house';
 import { draftBoundary } from './support/business-drafts';
 
-const records = JSON.parse(readFileSync(new URL('./support/donor-demo/records.json', import.meta.url), 'utf8')) as Record<ShopResource, Record<string, unknown>[]>;
+const records = binaryRecords as Record<ShopResource, Record<string, unknown>[]>;
 const nativeDocuments = Object.entries(records).flatMap(([name, rows]) => {
   const resource = name as ShopResource;
   const type = definitions[resource].type;

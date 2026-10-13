@@ -21,7 +21,7 @@ describe('bundled artwork boundary', () => {
         const assets = posterChoices.map(choice => safePoster(choice.id));
         expect(assets).not.toContain(safePoster(''));
         expect(safePoster('')).toBeUndefined();
-        expect(isAttachmentReference('at_c.8')).toBe(true);
+        expect(isAttachmentReference('images/animals-1.jpeg')).toBe(true);
         expect(isAttachmentReference('https://example.test/track')).toBe(false);
         expect(initials({ first_name: 'Ada', last_name: 'Stone' })).toBe('AS');
         expect(initials()).toBe('?');

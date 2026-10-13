@@ -151,139 +151,12 @@ function refused(message: string, details: unknown = null): never {
 }
 export type AttachmentRead = { blob: Blob | null; name: string; type: string | null; status: "available" | "not_saved" | "unavailable" };
 function attachmentRef(value: unknown): string {
-  if (!isAttachmentReference(value)) refused("Expected a House at_ attachment reference for this Room.");
+  if (!isAttachmentReference(value)) refused("Expected a relative binary file path in this Room.");
   return value;
 }
 async function attachmentDigest(blob: Blob): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", await blob.arrayBuffer());
   return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-}
-function actionValue(
-  action: string,
-  response: Awaited<ReturnType<HouseRuntime["call"]>>,
-): unknown {
-  if (!response || response.kind !== "action") {
-    const detail = JSON.stringify(response) ?? String(response);
-    refused(`House ${action} did not complete: ${detail}`, response);
-  }
-  return response.result;
-}
-type AttachmentRecord = {
-  original: unknown;
-  version: string;
-  attachment: string;
-  name: string;
-  bytes: number;
-  sha256: string;
-  media_type: string | null;
-  save: { status: "pending" | "saved" | "failed"; failure: string | null };
-  storage: { provider: "house" | "connected"; scope: string };
-  read?: { status: AttachmentRead["status"] };
-  blob?: Blob;
-};
-function objectResult(value: unknown, label: string): Record<string, unknown> {
-  if (
-    !value ||
-    typeof value !== "object" ||
-    Array.isArray(value) ||
-    value instanceof Blob
-  )
-    refused(`Unsupported ${label} result shape.`, value);
-  return value as Record<string, unknown>;
-}
-function exactKeys(
-  value: Record<string, unknown>,
-  allowed: string[],
-  required: string[],
-  label: string,
-) {
-  if (
-    Object.keys(value).some((key) => !allowed.includes(key)) ||
-    required.some((key) => !Object.hasOwn(value, key))
-  )
-    refused(`Unsupported ${label} result keys.`, value);
-}
-function attachmentRecord(
-  value: unknown,
-  room: string,
-  allowRead: boolean,
-): AttachmentRecord {
-  const record = objectResult(value, "attachment");
-
-  const required = [
-    "original",
-    "version",
-    "attachment",
-    "name",
-    "bytes",
-    "sha256",
-    "media_type",
-    "save",
-    "storage",
-  ];
-  exactKeys(
-    record,
-    [...required, ...(allowRead ? ["read", "blob"] : [])],
-    required,
-    "attachment",
-  );
-  attachmentRef(record.attachment);
-  if (
-    typeof record.version !== "string" ||
-    !record.version ||
-    typeof record.name !== "string" ||
-    !record.name ||
-    typeof record.bytes !== "number" ||
-    !Number.isSafeInteger(record.bytes) ||
-    record.bytes < 0 ||
-    typeof record.sha256 !== "string" ||
-    !/^[a-f0-9]{64}$/.test(record.sha256) ||
-    (record.media_type !== null && typeof record.media_type !== "string")
-  )
-    refused("Unsupported attachment metadata shape.", record);
-  const save = objectResult(record.save, "attachment save");
-  exactKeys(
-    save,
-    ["status", "failure"],
-    ["status", "failure"],
-    "attachment save",
-  );
-  if (
-    !["pending", "saved", "failed"].includes(String(save.status)) ||
-    (save.failure !== null && typeof save.failure !== "string")
-  )
-    refused("Unsupported attachment save state.", record);
-  if (save.status === "failed")
-    refused(
-      `House attachment save failed: ${JSON.stringify(save.failure)}`,
-      record,
-    );
-  const storage = objectResult(record.storage, "attachment storage");
-  exactKeys(
-    storage,
-    ["provider", "scope"],
-    ["provider", "scope"],
-    "attachment storage",
-  );
-  if (
-    !["house", "connected"].includes(String(storage.provider)) ||
-    storage.scope !== room
-  )
-    refused("This attachment is not bound to the selected House Room.", record);
-  if (record.read !== undefined) {
-    const read = objectResult(record.read, "attachment read");
-    exactKeys(read, ["status"], ["status"], "attachment read");
-    if (
-      !["available", "not_saved", "unavailable"].includes(String(read.status))
-    )
-      refused("Unsupported attachment read state.", record);
-  }
-  if (record.blob !== undefined && !(record.blob instanceof Blob))
-    refused(
-      "Unsupported attachment bytes; Runtime must return a Blob.",
-      record,
-    );
-  return record as unknown as AttachmentRecord;
 }
 const storedKey = (_resource: ShopResource, key: string) => key;
 function storedValue(kind: FieldKind, value: unknown): unknown {
@@ -342,7 +215,7 @@ function validate(resource: ShopResource, input: Row): Row {
       refused(`${key} must be a valid date.`);
   for (const key of resource === "customers" ? ["avatar"] : resource === "categories" ? ["image"] : [])
     if (row[key] && !isAttachmentReference(row[key]))
-      refused("Images must use a House Room attachment reference.");
+      refused("Images must use a relative binary file path in the House Room.");
   if (resource === "products") {
     for (const key of ["image", "thumbnail"])
       if (row[key] && !isAttachmentReference(row[key]) && !/^\/posters\/(0[1-9]|1[0-2])\.svg$/.test(row[key]))
@@ -737,7 +610,7 @@ async function queueChanges(
   const saved = await md.save(room, drafts);
   if (saved.outcome !== "saved")
     refused(
-      `House did not queue this change: ${saved.rule}. Drafts have been kept.`,
+      `House did not queue this change: ${saved.code}. Drafts have been kept.`,
       saved,
     );
   return { outcome: "queued", identifier: saved.identifier };
@@ -813,39 +686,17 @@ export function createHouseDataProvider(
   const notify = (status: MutationStatus) => options.onMutation?.(status);
   const getAttachment = async (reference: string): Promise<AttachmentRead> => {
     assertAvailable();
-    const attachment_ref = attachmentRef(reference);
-    const result = actionValue(
-      "attachments/get",
-      await md.call("attachments/get", { room_ref: room, attachment_ref }),
-    );
-    const record = attachmentRecord(result, room, true);
-    if (record.attachment !== attachment_ref)
-      refused("House returned a different attachment reference.", result);
-    const blob = record.blob ?? null;
-    if (blob && blob.size !== record.bytes)
-      refused(
-        "House attachment byte length does not match its metadata.",
-        result,
-      );
-    if (blob && (await attachmentDigest(blob)) !== record.sha256)
-      refused("House attachment SHA-256 does not match its metadata.", result);
-    if (record.read?.status === "available" && !blob)
-      refused(
-        "House reported an available attachment without Blob bytes.",
-        result,
-      );
-    if (blob && record.read && record.read.status !== "available")
-      refused(
-        "House returned attachment bytes with an incompatible read status.",
-        result,
-      );
+    const path = attachmentRef(reference);
+    const result = await md.query({ rooms: [room], pathPrefix: path.slice(0, path.lastIndexOf("/")), select: "all" });
     assertAvailable();
-    return {
-      blob,
-      name: record.name,
-      type: record.media_type,
-      status: blob ? "available" : (record.read?.status ?? "unavailable"),
-    };
+    const metadata = result.documents.find(item => item.room === room && item.path === path)?.binaryFile;
+    if (!metadata) refused("The binary file is not declared in the selected Room.");
+    const answer = await md.binaryFile.read(room, path);
+    assertAvailable();
+    if (answer.kind !== "binary") return { blob: null, name: path.split("/").at(-1)!, type: metadata.mediaType, status: "unavailable" };
+    if (answer.blob.size !== metadata.byteLength) refused("House binary file byte length does not match its metadata.");
+    if (await attachmentDigest(answer.blob) !== metadata.sha256) refused("House binary file SHA-256 does not match its metadata.");
+    return { blob: answer.blob, name: path.split("/").at(-1)!, type: metadata.mediaType, status: "available" };
   };
 
   const mutation = <T>(
@@ -868,13 +719,11 @@ export function createHouseDataProvider(
             return ["image", "thumbnail", "avatar"].map(key => fields[key]).filter(isAttachmentReference);
           });
           if (references.length) {
-            // Rooms is a detached local snapshot. Save must never fetch image bytes or call an Action.
-            const selected = (await md.rooms()).find(value => value.locator === room);
-            assertAvailable();
-            if (!selected) refused("The selected Room metadata is unavailable. Its draft is kept.");
             for (const reference of references) {
-              const metadata = selected.attachments.find(value => value.reference === reference);
-              if (!metadata) refused("The image reference is not declared in the selected Room. Its draft is kept.");
+              const found = await md.query({ rooms: [room], pathPrefix: reference.slice(0, reference.lastIndexOf("/")), select: "all" });
+              assertAvailable();
+              if (!found.documents.some(item => item.room === room && item.path === reference && item.binaryFile))
+                refused("The image path is not declared in the selected Room. Its draft is kept.");
             }
           }
           const receipt = await queueChanges(md, room, changes, assertAvailable, owned);

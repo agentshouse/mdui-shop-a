@@ -117,11 +117,11 @@ it('pairs CSS-variable dark-mode initials with the same mode boundary as MUI Ava
 });
 
 it('preserves the Room portrait path and caller styling', () => {
-    state.customer.avatar = 'at_c.8';
+    state.customer.avatar = 'images/animals-1.jpeg';
     const view = render(<ThemeProvider theme={createTheme()}><AvatarField size="45" sx={{ marginRight: '7px' }} /></ThemeProvider>);
     const avatar = view.container.querySelector('.MuiAvatar-root')!;
     expect(avatar).not.toHaveTextContent('AS');
-    expect(avatar.querySelector('img')).toHaveAttribute('data-reference', 'at_c.8');
+    expect(avatar.querySelector('img')).toHaveAttribute('data-reference', 'images/animals-1.jpeg');
     expect(getComputedStyle(avatar).width).toBe('45px');
     expect(getComputedStyle(avatar).marginRight).toBe('7px');
 });

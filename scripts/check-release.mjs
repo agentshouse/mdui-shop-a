@@ -11,7 +11,7 @@ const reviewedVitePreloadSource =
   'function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}}';
 const reviewedPosterHelper = {
   source: "src/assets.ts",
-  sha256: "fff7b41675395cc777c95103798e8154a3ece919b2e1957bc5f66c3476e35fce",
+  sha256: "1d9555254b7d8d2a6ea80c48bbf97aa8ee7d95d0a62e55a0597708fea0178d8c",
 };
 const reviewedRoomImage = { source: "src/RoomImage.tsx", sha256: "7c5cfde91e9d8aa138410dea245e3f41a0731eea1684af090f6638f74f9b000a" };
 const reviewedRichText = [

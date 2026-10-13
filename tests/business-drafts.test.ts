@@ -44,14 +44,14 @@ it('allows local draft typing and Save during provider halt but preserves lost-r
 it('validates image references against local Room metadata without a Provider Action, including while write-halted',async()=>{
   const {provider,methods,drafts,attachments}=draftBoundary();
   const first=await provider.openDraft('products',undefined,productInput);
-  await first.write({image:'at_declared',thumbnail:'at_declared'});
+  await first.write({image:'images/declared.jpg',thumbnail:'images/declared.jpg'});
   const prepared=await first.prepare();
   await expect(provider.create('products',{data:prepared.data,meta:{houseDraft:prepared.reference}})).rejects.toThrow('not declared in the selected Room');
   expect(drafts.size).toBe(1);expect(methods.save).not.toHaveBeenCalled();expect(methods.call).not.toHaveBeenCalled();
-  attachments.push({reference:'at_declared',name:'poster.jpg',byteLength:128,mediaType:'image/jpeg',entry:{}});
+  attachments.push({reference:'images/declared.jpg',name:'poster.jpg',byteLength:128,mediaType:'image/jpeg',entry:{}});
   const result=await provider.create('products',{data:prepared.data,meta:{houseDraft:prepared.reference}});
-  expect(result.data.image).toBe('at_declared');expect(methods.save).toHaveBeenCalledWith('r',[prepared.reference]);
-  expect(methods.rooms).toHaveBeenCalledTimes(2);expect(methods.call).not.toHaveBeenCalled();expect(drafts.size).toBe(0);first.close();
+  expect(result.data.image).toBe('images/declared.jpg');expect(methods.save).toHaveBeenCalledWith('r',[prepared.reference]);
+  expect(methods.query).toHaveBeenCalledWith({rooms:['r'],pathPrefix:'images',select:'all'});expect(methods.call).not.toHaveBeenCalled();expect(drafts.size).toBe(0);first.close();
 });
 
 it('does not submit an older draft when the latest local typing write failed',async()=>{

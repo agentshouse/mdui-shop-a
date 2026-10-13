@@ -13,7 +13,7 @@ const entry = html.match(/<script[^>]+src="([^"]+\.js)"/)[1];
 const filename = path.resolve(root, 'dist', entry);
 assert(filename.startsWith(path.join(root, 'dist') + path.sep));
 const source = fs.readFileSync(filename, 'utf8');
-const donorRecords = JSON.parse(fs.readFileSync(path.join(root, 'tests/support/donor-demo/records.json'), 'utf8'));
+const { seedRecords: donorRecords } = await import('../tests/support/donor-seed-data.mjs');
 const donorTypes = { products: 'shop_product', categories: 'shop_category', customers: 'shop_customer', orders: 'shop_order', invoices: 'shop_invoice', reviews: 'shop_review' };
 const nativeDocuments = Object.entries(donorRecords).flatMap(([resource, rows]) => rows.map(row => ({
     room: 'local-test-room', path: `shop/${resource}/${row.id}.md`, type: donorTypes[resource],
@@ -114,7 +114,7 @@ async function check(withHost) {
         assert.equal(networkCalls, 0, 'Startup must not make direct network calls');
         assert.equal(storageReads.localStorage, 0, 'Startup must not read localStorage');
         if (withHost) {
-            assert(content.includes('Monthly Revenue'), 'The donor dashboard must render');
+            assert(content.includes('Monthly Revenue'), `The donor dashboard must render: ${content.slice(-2000)}`);
             assert(reads.length > 0, 'The donor dashboard must observe its House replica');
             assert(reads.every(query => query.rooms?.length === 1 && query.rooms[0] === 'local-test-room'));
             assert.equal(reads.length, 1, 'Only one complete typed Room observation feeds every donor page');

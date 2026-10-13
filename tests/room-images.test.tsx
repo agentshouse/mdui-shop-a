@@ -17,14 +17,14 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 async function intersect() { await act(async () => enter([{ isIntersecting: true }] as IntersectionObserverEntry[], {} as IntersectionObserver)); }
 describe('lazy Room image boundary', () => {
     it('does not read until near viewport, then renders only a verified blob URL and revokes it', async () => {
-        const view = render(<RoomImage value="at_c.8" alt="Cat Nose" />);
+        const view = render(<RoomImage value="images/animals-1.jpeg" alt="Cat Nose" />);
         expect(provider.getAttachment).not.toHaveBeenCalled();
         const img = view.getByAltText('Cat Nose');
         expect(img).toHaveAttribute('loading', 'lazy');
         expect(img).not.toHaveAttribute('src');
         await intersect();
         await waitFor(() => expect(img).toHaveAttribute('src', 'blob:verified-room-image'));
-        expect(provider.getAttachment).toHaveBeenCalledWith('at_c.8');
+        expect(provider.getAttachment).toHaveBeenCalledWith('images/animals-1.jpeg');
         view.unmount();
         expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:verified-room-image');
     });
@@ -38,7 +38,7 @@ describe('lazy Room image boundary', () => {
         for (const blob of [new Blob(['<svg/>'], { type: 'image/svg+xml' }), new Blob(['<html/>'], { type: 'image/jpeg' }), new Blob([new Uint8Array(10 * 1024 * 1024 + 1)], { type: 'image/jpeg' })]) expect(await isSafeRaster(blob)).toBe(false);
         expect(await isSafeRaster(jpeg())).toBe(true);
         provider.getAttachment.mockResolvedValue({ blob: new Blob(['<svg/>'], { type: 'image/jpeg' }), status: 'available' });
-        const view = render(<RoomImage value="at_c.8" alt="" />);
+        const view = render(<RoomImage value="images/animals-1.jpeg" alt="" />);
         await intersect();
         await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('title', expect.stringContaining('The Room file is not a supported raster image.')));
         expect(URL.createObjectURL).not.toHaveBeenCalled();
@@ -46,7 +46,7 @@ describe('lazy Room image boundary', () => {
     it('discards a late result when value changes or the component unmounts', async () => {
         let resolve!: (value: any) => void;
         provider.getAttachment.mockReturnValue(new Promise(r => { resolve = r; }));
-        const view = render(<RoomImage value="at_c.8" alt="" />);
+        const view = render(<RoomImage value="images/animals-1.jpeg" alt="" />);
         await intersect();
         view.rerender(<RoomImage value="" alt="" />);
         await act(async () => resolve({ blob: jpeg(), status: 'available' }));
@@ -56,7 +56,7 @@ describe('lazy Room image boundary', () => {
     });
     it('does not fall back to a URL when bytes are missing', async () => {
         provider.getAttachment.mockResolvedValue({ blob: null, status: 'unavailable' });
-        const view = render(<RoomImage value="at_c.8" alt="" />);
+        const view = render(<RoomImage value="images/animals-1.jpeg" alt="" />);
         await intersect();
         await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('title', 'The Room image could not be read.'));
         expect(view.container.querySelector('img')).not.toHaveAttribute('src');
@@ -65,12 +65,12 @@ describe('lazy Room image boundary', () => {
 
 it('clears the previous object URL before showing another record image', async () => {
     URL.createObjectURL = vi.fn().mockReturnValueOnce('blob:first').mockReturnValueOnce('blob:second');
-    const view = render(<RoomImage value="at_c.8" alt="" />);
+    const view = render(<RoomImage value="images/animals-1.jpeg" alt="" />);
     await intersect();
     await waitFor(() => expect(view.container.querySelector('img')).toHaveAttribute('src', 'blob:first'));
     let resolve!: (value: any) => void;
     provider.getAttachment.mockReturnValue(new Promise(r => { resolve = r; }));
-    view.rerender(<RoomImage value="at_h.2" alt="" />);
+    view.rerender(<RoomImage value="images/animals-2.jpeg" alt="" />);
     expect(view.container.querySelector('img')).not.toHaveAttribute('src');
     expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:first');
     await act(async () => resolve({ blob: jpeg(), status: 'available' }));
@@ -81,7 +81,7 @@ it('clears the previous object URL before showing another record image', async (
 it.each(['', 'application/octet-stream'])('renders verified JPEG bytes when transport MIME is %j and metadata is absent', async mime => {
     const original = new Blob([await jpeg().arrayBuffer()], { type: mime });
     provider.getAttachment.mockResolvedValue({ blob: original, name: 'animals-1.jpeg', type: null, status: 'available' });
-    const view = render(<RoomImage value="at_c.8" alt="Donor poster" />);
+    const view = render(<RoomImage value="images/animals-1.jpeg" alt="Donor poster" />);
     await intersect();
     await waitFor(() => expect(view.getByAltText('Donor poster')).toHaveAttribute('src', 'blob:verified-room-image'));
     const rendered = vi.mocked(URL.createObjectURL).mock.calls[0][0] as Blob;

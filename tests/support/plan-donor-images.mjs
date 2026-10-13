@@ -11,7 +11,7 @@ import { parse } from '@agentshouse/mdmodel';
 import { seedRecords } from './donor-seed-data.mjs';
 export function imageTargets() {
     return Object.entries(seedRecords).flatMap(([resource, rows]) => rows.flatMap(row => {
-        const fields = Object.fromEntries(['image', 'thumbnail', 'avatar'].filter(field => /^at_[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(row[field] ?? '')).map(field => [field, row[field]]));
+        const fields = Object.fromEntries(['image', 'thumbnail', 'avatar'].filter(field => /^images\/[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(row[field] ?? '')).map(field => [field, row[field]]));
         return Object.keys(fields).length ? [{ path: `/rooms/shop-port/shop/${resource}/${row.id}.md`, type: `shop_${resource === 'categories' ? 'category' : resource.slice(0, -1)}`, id: row.id, fields }] : [];
     }));
 }

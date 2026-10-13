@@ -14,12 +14,12 @@ it('maps 130 products, 13 category covers and exactly 223 donor portraits', () =
     for (const target of targets) {
         const resource = target.path.split('/')[4] as keyof typeof counts;
         counts[resource]++;
-        for (const reference of Object.values(target.fields)) expect(Object.values(map.attachments)).toContain(reference);
+        for (const reference of Object.values(target.fields)) expect(Object.keys(map.attachments).map(name => `images/${name}`)).toContain(reference);
     }
     expect(counts).toEqual({ products: 130, categories: 13, customers: 223 });
-    expect(seedRecords.products[0]).toMatchObject({ image: map.attachments['animals-1.jpeg'], thumbnail: map.attachments['animals-1.jpeg'] });
-    expect(seedRecords.categories[0].image).toBe(map.attachments['animals-1.jpeg']);
-    expect(seedRecords.customers.find((row: any) => row.avatar).avatar).toBe(map.attachments['avatar-0.jpeg']);
+    expect(seedRecords.products[0]).toMatchObject({ image: 'images/animals-1.jpeg', thumbnail: 'images/animals-1.jpeg' });
+    expect(seedRecords.categories[0].image).toBe('images/animals-1.jpeg');
+    expect(seedRecords.customers.find((row: any) => row.avatar).avatar).toBe('images/avatar-0.jpeg');
 });
 it('plans only exact-base image fields and refuses changed artwork, wrong type or ID', () => {
     const target = imageTargets().find((target: any) => target.type === 'shop_product');
@@ -27,7 +27,7 @@ it('plans only exact-base image fields and refuses changed artwork, wrong type o
     const old = serializeSeedRecord('products', { ...row, image: '', thumbnail: '' });
     expect(planFields(target, old)).toEqual(['image', 'thumbnail'].map(field => ({ op: 'set_field', path: target.path, field, base: '', value: target.fields[field] })));
     expect(planFields(target, serializeSeedRecord('products', row))).toEqual([]);
-    expect(() => planFields(target, serializeSeedRecord('products', { ...row, image: 'at_changed.a' }))).toThrow('Changed image');
+    expect(() => planFields(target, serializeSeedRecord('products', { ...row, image: 'images/changed.a.jpg' }))).toThrow('Changed image');
     expect(() => planFields(target, old.replace('shop_product', 'shop_customer'))).toThrow('Wrong type');
     expect(() => planFields(target, old.replace(row.id, 'donor-other'))).toThrow('Wrong ID');
 });

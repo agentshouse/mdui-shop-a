@@ -40,7 +40,7 @@ const assets: Readonly<Record<string, string>> = {
     '/posters/12.svg': poster12,
 };
 export function isAttachmentReference(value: unknown): value is string {
-    return typeof value === 'string' && /^at_[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(value);
+    return typeof value === 'string' && value.includes('/') && !value.includes("\0") && !/[\\:?#]/.test(value) && value.split('/').every(part => part !== '' && part !== '.' && part !== '..');
 }
 export function safePoster(value: unknown): string | undefined {
     return typeof value === 'string' && Object.hasOwn(assets, value) ? assets[value] : undefined;

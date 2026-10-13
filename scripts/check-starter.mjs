@@ -1,3 +1,4 @@
+import { checkCurrentStarter } from './check-current-starter.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,21 +18,18 @@ function walk(directory) {
   }
 }
 walk('starter');
-assert(Object.keys(library).length > 0, 'Starter must contain existing donor documents.');
+assert(Object.keys(library).length > 0, 'Starter must contain current documents.');
 const schema = verify(fs.readFileSync('schema.yaml', 'utf8'));
 assert.equal(schema.verdict, 'accept');
 assert.deepEqual(validate(library, { binaryTargets: [] }, schema.model), { verdict: 'accept' });
-const donor = JSON.parse(fs.readFileSync('tests/support/donor-demo/records.json', 'utf8'));
+checkCurrentStarter(library);
 const resources = { shop_product: 'products', shop_category: 'categories', shop_customer: 'customers', shop_order: 'orders', shop_invoice: 'invoices', shop_review: 'reviews' };
 const documents = Object.entries(library).map(([filename, content]) => {
   const result = parse(content);
   assert(result.ok);
   const resource = resources[result.document.type];
-  const original = donor[resource]?.find(record => record.id === result.document.fields.id);
-  assert(original, `Starter must reuse an existing donor record: ${filename}`);
-  assert.equal(filename, `shop/${resource}/${original.id}.md`);
-  const expected = Object.fromEntries(Object.entries(original).filter(([key, value]) => value != null && !['image', 'thumbnail', 'avatar'].includes(key)).map(([key, value]) => [key, typeof value === 'boolean' ? String(value) : typeof value === 'object' ? JSON.stringify(value) : value]));
-  assert.deepEqual({ ...result.document.fields }, { type: result.document.type, ...expected }, `Starter changed donor data: ${filename}`);
+  assert(resource, `Unknown Starter resource: ${filename}`);
+  assert.equal(filename, `shop/${resource}/${result.document.fields.id}.md`);
   // Room-specific attachment IDs are unusable in a newly instantiated Room.
   assert(!Object.values(result.document.fields).some(value => typeof value === 'string' && /^at_/.test(value)), 'Unresolved Room-scoped attachment in starter; establish the portable attachment contract before publication.');
   return result.document;

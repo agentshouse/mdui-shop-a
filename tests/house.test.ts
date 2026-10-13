@@ -452,7 +452,7 @@ describe('Grouped drafts, races and synchronization', () => {
     expect(f.statuses.at(-1)?.phase).toBe('error');
   });
   it.each(['write-halted', 'conflicted', 'invalid-document'])('keeps drafts when save refuses %s', async rule => {
-    const f = fixture(); f.md.save.mockResolvedValueOnce({ outcome: 'refused', rule });
+    const f = fixture(); f.md.save.mockResolvedValueOnce({ outcome: 'refused', code: rule, retryable: false });
     await expect(f.provider.create('categories', { data: category() })).rejects.toThrow(`House did not queue this change: ${rule}`);
     expect(f.pending.size).toBe(1); expect(f.md.roomDraft.discard).not.toHaveBeenCalled();
     expect(f.statuses.at(-1)?.phase).toBe('error'); expect(f.close).toHaveBeenCalledOnce();
@@ -609,7 +609,7 @@ it('renders newly visited donor pages synchronously from one observed local snap
 it('never mutates the observed replica during local Save preparation or refusal', async () => {
  const f=fixture(); const provider=createHouseDataProvider(f.md as unknown as HouseRuntime,ROOM,{observed:true});
  provider.setObservedSnapshot({documents:[]});
- f.md.save.mockResolvedValueOnce({outcome:'refused',rule:'invalid-document'} as any);
+ f.md.save.mockResolvedValueOnce({outcome:'refused',code: 'invalid-document', retryable: false} as any);
  await expect(provider.create('categories',{data:category()})).rejects.toThrow('invalid-document');
  const view=provider.getLocalResult(['categories','getList',{pagination:{page:1,perPage:10},filter:{}}]);
  expect((view.value as any).data).toEqual([]); expect(f.md.query).not.toHaveBeenCalled();

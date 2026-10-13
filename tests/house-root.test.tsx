@@ -105,7 +105,7 @@ describe('House Room wrapper', () => {
     });
     it('blocks access on refusal and resumes if refusal clears', async () => {
         await openShop();
-        emit('refusal', { reason: 'revoked' });
+        emit('refusal', { code: 'revoked', retryable: false });
         expect(screen.getByRole('alert')).toHaveTextContent('revoked');
         expect(screen.getByTestId('shop-app')).not.toBeVisible();
         emit('refusal', null);

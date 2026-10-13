@@ -11,9 +11,12 @@ const types = {
   invoices: "shop_invoice",
   reviews: "shop_review",
 };
-export const seedRecords = JSON.parse(
+const retainedRecords = JSON.parse(
   readFileSync(new URL("./donor-demo/records.json", import.meta.url), "utf8"),
 );
+const attachmentMap = JSON.parse(readFileSync(new URL("./donor-demo/poster-attachments.json", import.meta.url), "utf8")).attachments;
+const filePaths = Object.fromEntries(Object.entries(attachmentMap).map(([name, reference]) => [reference, `images/${name}`]));
+export const seedRecords = Object.fromEntries(Object.entries(retainedRecords).map(([resource, rows]) => [resource, rows.map(row => Object.fromEntries(Object.entries(row).map(([key, value]) => [key, ["image", "thumbnail", "avatar"].includes(key) && typeof value === "string" ? filePaths[value] ?? value : value])))]));
 export function serializeSeedRecord(resource, record) {
   const fields = { type: types[resource], ...record };
   const front = Object.entries(fields)

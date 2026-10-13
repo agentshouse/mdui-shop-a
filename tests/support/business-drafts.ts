@@ -16,7 +16,7 @@ export function draftBoundary(){
   const methods={
     rooms:vi.fn(async()=>[{locator:'r',name:'Shop',attachments:structuredClone(attachments)}]),
     call:vi.fn(async()=>{throw new Error('Save must not invoke a Provider Action');}),
-    query:vi.fn(async()=>({documents:structuredClone(documents)})),
+    query:vi.fn(async(input?:{pathPrefix?:string})=>({documents:input?.pathPrefix ? attachments.filter(item=>item.reference.startsWith(input.pathPrefix!)).map(item=>({room:'r',path:item.reference,binaryFile:{path:item.reference,byteLength:item.byteLength,mediaType:item.mediaType}})) : structuredClone(documents)})),
     observe:vi.fn(async(topic:string)=>topic==='room-drafts'?{current:()=>[...drafts.values()],subscribe:(fn:(values:readonly Draft[])=>void)=>{listeners.add(fn);return()=>listeners.delete(fn);},close:vi.fn()}:{current:()=> 'write-halted',subscribe:()=>()=>{},close:vi.fn()}),
     presentation:{read:vi.fn(async()=>structuredClone(state)),write:vi.fn(async(value:unknown)=>{state=structuredClone(value);})},
     roomDraft:{read:vi.fn(async(_room:string,path:string)=>structuredClone(drafts.get(path)??null)),write:vi.fn(async(room:string,path:string,base:string|null,parts:Draft['parts'])=>{
@@ -26,10 +26,10 @@ export function draftBoundary(){
       const draft={room,path,revision:`d${++revision}`,parts:next,changedUnderneath:current?.changedUnderneath??{},returned:current?.returned??null};drafts.set(path,draft);publish();return{outcome:'written',roomDraft:structuredClone(draft)};
     }),discard:vi.fn()},
     save:vi.fn(async(_room:string,entries:{path:string;revision:string}[])=>{
-      if(refusal)return{outcome:'refused',rule:refusal};
-      if(entries.some(entry=>drafts.get(entry.path)?.revision!==entry.revision))return{outcome:'refused',rule:'stale'};
+      if(refusal)return{outcome:'refused',code:refusal,retryable:false};
+      if(entries.some(entry=>drafts.get(entry.path)?.revision!==entry.revision))return{outcome:'refused',code:'stale',retryable:false};
       for(const entry of entries){const draft=drafts.get(entry.path)!;const creation=draft.parts.creation;
-        if(creation&&'fields' in creation){if(documents.some(doc=>doc.path===entry.path))return{outcome:'refused',rule:'exists'};documents.push({room:'r',path:entry.path,type:creation.type,fields:{type:creation.type,...creation.fields},markdown:JSON.stringify(creation.fields)});}
+        if(creation&&'fields' in creation){if(documents.some(doc=>doc.path===entry.path))return{outcome:'refused',code:'exists',retryable:false};documents.push({room:'r',path:entry.path,type:creation.type,fields:{type:creation.type,...creation.fields},markdown:JSON.stringify(creation.fields)});}
         else {const doc=documents.find(doc=>doc.path===entry.path)!;for(const [key,part] of Object.entries(draft.parts.fields??{}))doc.fields[key]=part.value;doc.markdown=JSON.stringify(doc.fields);}
         drafts.delete(entry.path);
       }publish();return{outcome:'saved',identifier:'waiting-locally'};

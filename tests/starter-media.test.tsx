@@ -18,7 +18,7 @@ it.each([undefined, null, ''])('renders text-only starter media %j without an im
 it('observes an image added after a missing-media placeholder', () => {
   const view = render(<RoomImage alt="Cat Nose" />);
   expect(observe).not.toHaveBeenCalled();
-  view.rerender(<RoomImage value="at_c.8" alt="Cat Nose" />);
+  view.rerender(<RoomImage value="images/animals-1.jpeg" alt="Cat Nose" />);
   expect(view.getByAltText('Cat Nose')).toHaveAttribute('loading', 'lazy');
   expect(observe).toHaveBeenCalledWith(view.getByAltText('Cat Nose'));
   expect(provider.getAttachment).not.toHaveBeenCalled();

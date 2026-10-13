@@ -68,8 +68,8 @@ test("full retail donor output preserves every entity and relationship", () => {
       for (const item of row.basket ?? [])
         expect(ids.products.has(item.product_id)).toBe(true);
       for (const key of ["image", "thumbnail"])
-        if (key in row) expect(row[key]).toMatch(/^at_[A-Za-z0-9][A-Za-z0-9_.-]*$/);
-      if (row.avatar) expect(row.avatar).toMatch(/^at_[A-Za-z0-9][A-Za-z0-9_.-]*$/);
+        if (key in row) expect(row[key]).toMatch(/^images\/[A-Za-z0-9][A-Za-z0-9_.-]*$/);
+      if (row.avatar) expect(row.avatar).toMatch(/^images\/[A-Za-z0-9][A-Za-z0-9_.-]*$/);
     }
   for (const invoice of seedRecords.invoices) {
     const order = seedRecords.orders.find(

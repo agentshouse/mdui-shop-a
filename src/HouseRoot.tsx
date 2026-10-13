@@ -32,7 +32,7 @@ export default function HouseRoot() {
     const [attention, setAttention] = useState<readonly Attention[]>([]);
     const [draftAttention, setDraftAttention] = useState<readonly Attention[]>([]);
     const [halted, setHalted] = useState(false);
-    const [queue, setQueue] = useState({ waiting: 0, submitted: 0, accepted: 0, reset: 0 });
+    const [queue, setQueue] = useState({ local: 0, waiting: 0, submitted: 0, accepted: 0, reset: 0 });
 
     useEffect(() => {
         let disposed = false;
@@ -64,7 +64,7 @@ export default function HouseRoot() {
                 listen(observeRoomDrafts(md), value => setDraftAttention(value.filter(draft => Boolean(draft.returned)))),
                 listen(observeServiceMode(md), value => setHalted(value === 'write-halted')),
                 listen(observeStorageLoss(md), value => setStorageWarning(value ?? '')),
-                listen(observeConnectionRefusal(md), value => { denied = Boolean(value); setRefused(value ? `House connection refused: ${value.reason}` : ''); refresh(); }),
+                listen(observeConnectionRefusal(md), value => { denied = Boolean(value); setRefused(value ? `House connection refused: ${value.code}` : ''); refresh(); }),
             ]);
         }
         void connect().catch(value => { if (!disposed) { available.current = false; setError(errorText(value)); setFatal(true); } });
@@ -86,7 +86,7 @@ export default function HouseRoot() {
     }) : null, [runtime, room]);
 
     useEffect(() => {
-        setQueue({ waiting: 0, submitted: 0, accepted: 0, reset: 0 });
+        setQueue({ local: 0, waiting: 0, submitted: 0, accepted: 0, reset: 0 });
         if (!runtime || !room || !provider || !ready || fatal || refused) return;
         let disposed = false;
         const cleanups: (() => void)[] = [];
@@ -100,7 +100,7 @@ export default function HouseRoot() {
         void Promise.all([
             watch(observeShop(runtime, room), value => { provider.setObservedSnapshot(value); projection.refresh(); setHasSnapshot(true); setError(''); }),
             watch(observeQueue(runtime, room), entries => {
-                const summary = { waiting: 0, submitted: 0, accepted: 0, reset: 0 };
+                const summary = { local: 0, waiting: 0, submitted: 0, accepted: 0, reset: 0 };
                 entries.forEach(entry => { summary[entry.state]++; });
                 setQueue(summary);
             }),
